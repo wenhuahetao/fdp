@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk">
+<title>简单文本编辑器</title>
+</head>
+<body>
+<div
+style="width: 450px; height: 30px; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+<select onchange=document.execCommand('FontSize',false,this.value)>
+<option value=3>3号字</option>
+<option value=4>4号字</option>
+<option value=5>5号字</option>
+<option value=6>6号字</option>
+<option value=7>7号字</option>
+</select> <input type=button value="红色" onclick=document.execCommand('ForeColor',false,'#ff0000')>
+<input type=button value="绿色" onclick=document.execCommand('ForeColor',false,'#00ff00')>
+<input type=button value="蓝色" onclick=document.execCommand('ForeColor',false,'#0000ff')>
+<input type=button value="左对齐"
+onclick="document.execCommand('JustifyLeft')"> <input
+type=button value="居中" onclick=document.execCommand('JustifyCenter')>
+<input type=button value="右对齐" onclick=document.execCommand('JustifyRight')>
+</div>
+<div id="editArea" contenteditable style="height: 200px; width: 450px; border: 1px solid; overflow-y: auto;">
+
+ssd
+
+润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳润体乳
+</div>
+<div align="center" style="width: 450px;">
+<input type="button" value="↓" onclick='htmlsource.value=editArea.innerHTML;'>
+<input type="button" value="↑" onclick='editArea.innerHTML=htmlsource.value;'>
+</div>
+<div>
+<textarea id="htmlsource" name="htmlsource" cols="62" rows="10"></textarea>
+</div>
+</body>
+</html>

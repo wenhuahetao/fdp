@@ -1,0 +1,473 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.sql.*,java.text.*,java.util.*"%>
+<!DOCTYPE>
+	<html>
+		<head >
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>区域碰撞分析明细</title>
+		<link rel="stylesheet" href="css/bootstrap.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+		<script src="http://33.175.29.33:8090/iserver/iClient/forJavaScript/libs/SuperMap.Include.js"></script>
+<%String path = request.getContextPath();%>
+<style type="text/css">
+
+html, body, #map {
+    margin: 0;
+    width: 99.9%;
+    height: 99.9%;
+}
+
+#viewEntire {
+    position:absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 2000;
+    width:32px;
+    height:32px;
+}
+#zoomIn {
+    position:absolute;
+    top: 66px;
+    left: 30px;
+    z-index: 2000;
+    width:32px;
+    height:32px;
+}
+#zoomOut {
+    position:absolute;
+    top: 102px;
+    left: 30px;
+    z-index: 2000;
+    width:32px;
+    height:32px;
+}
+
+   #showList{
+	 position:absolute;
+	 top:15%;
+	 right:10px;
+	 z-index: 2000;
+	 margin:0px 3px 3px;
+	 color:#4083c2;
+	 font-size:13px;
+	 font-family:sans-serif;
+}
+	
+	#showList .infoLeft{
+	margin-top:200px;
+	float:left;
+	}
+	#showList .infoRight{
+	     float:right;
+		 border:3px solid #a5c8ec;
+		 background-color:white;
+		 height:400px;
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		init();
+	});
+	
+	var dataCache,style = {
+			strokeColor : "#304DBE",
+			strokeWidth : 1,
+			pointerEvents : "visiblePainted",
+			fillColor : "#304DBE",
+			fillOpacity : 0.8
+		}
+	var searchMarkerlayer,drawPolygon1;
+	var local, map, layer, vectorLayer, markerLayer, drawPoint, nodeArray = [], pathTime, i = 0, j = 0, result, style = {
+			strokeColor : "#304DBE",
+			strokeWidth : 3,
+			pointerEvents : "visiblePainted",
+			fill : false
+		},
+		
+		style = {
+            strokeColor: "#304DBE",
+            strokeWidth: 3,
+            pointerEvents: "visiblePainted",
+            fill: false
+        },
+        styleGuidePoint = {
+            pointRadius: 10
+/*             ,
+            externalGraphic: "http://33.175.29.33:8090/iserver/iClient/forJavaScript/examples/images/walk.png" */
+        },
+        styleGuideLine = {
+            strokeColor: "#25FF25",
+            strokeWidth: 6,
+            fill: false
+        },
+		
+    url2 = "http://33.175.29.33:8090/iserver/services/transportationAnalyst-shaoxing/rest/networkanalyst/BuildNetwork@shaoxing20141202";
+	var url = "http://33.175.29.33:8090/iserver/services/map-shaoxing/rest/maps/shaoxing";
+	function init() {
+
+		map = new SuperMap.Map("map", {
+			controls : [ 
+                    new SuperMap.Control.ScaleLine(),//比例尺控件
+					new SuperMap.Control.Navigation()]//此控件处理伴随鼠标事件（拖拽，双击、鼠标滚轮缩放）的地图浏览
+		});
+		map.addControl(new SuperMap.Control.MousePosition());//该控件显示鼠标移动时，所在点的地理坐标
+		layer = new SuperMap.Layer.TiledDynamicRESTLayer("绍兴地图", url, null,
+				{
+					maxResolution : "auto"
+				});
+		layer.events.on({
+			"layerInitialized" : addLayer
+		});
+		vectorLayer = new SuperMap.Layer.Vector("Vector Layer");//绘制线图层
+		markerLayer = new SuperMap.Layer.Markers("Markers");
+		searchMarkerlayer = new  SuperMap.Layer.Markers("搜索图层");
+	}
+	function mouseClickHandler(event) {
+        closeInfoWin();
+        var marker = this;
+        var dtm = marker.dmt;
+        var lonlat = marker.getLonLat();
+        
+        var contentHTML=creatContentHTML(dtm);
+      //初始化FramedCloud类
+		framedCloud = new SuperMap.Popup.FramedCloud("chicken", marker
+				.getLonLat(), null, contentHTML, icon, true, null, true);
+
+		infowin = framedCloud;
+		map.addPopup(framedCloud);
+    }
+	function addLayer() {
+		map.addLayers([layer,searchMarkerlayer,markerLayer]);
+		map.setCenter(new SuperMap.LonLat(120.58262425281, 30.00030159373), 0);
+		var defScale = 0.000007580842517627697;
+		map.zoomToScale(defScale,true);
+	} 
+
+	function clearElements() {
+		markerLayer.clearMarkers();
+		searchMarkerlayer.clearMarkers();
+	}
+	function viewEntire() {
+     	map.zoomToMaxExtent();
+    }
+    
+    function zoomIn() {
+    	map.zoomIn();
+    }
+    
+    function zoomOut() {
+    	map.zoomOut();
+    }
+        
+	function findLjd(jsonObj){
+		var obj = jsonObj;
+ 	    for(var i=0;i<obj.length;i++){
+    	    var dtm=obj[i];
+    	    var size = new SuperMap.Size(39,25);//图片大小
+       		var offset = new SuperMap.Pixel(-(size.w/2), -size.h);//图标的偏移量
+       		icon = new SuperMap.Icon("<%=path%>/jtkz/gis/images/red.png", size, offset);
+       		nodeArray.push(new SuperMap.Geometry.Point(dtm[0],dtm[1]));//第一个框是一堆点
+            var marker = new SuperMap.Marker(new SuperMap.LonLat(dtm[0],dtm[1]),icon) ;//新建标记层	
+            markerLayer.addMarker(marker);//标记
+            marker.dmt = dtm;
+            marker.events.on({
+	           "mouseover":mouseClickHandler,//指向和边框的浮动弹窗
+	           "mouseout":closeInfoWin,
+	           "click":viewDevice, 
+	           "scope": marker
+	        });	
+	     }	   
+ 	   findPath();
+	}
+	
+	//打开对应的信息框
+    var infowin = null;
+	
+	function viewDevice(event){
+		closeInfoWin();
+		var marker = this;
+	    var dmt = marker.dmt;
+	    var lonlat = marker.getLonLat();
+		map.setCenter(new SuperMap.LonLat(lonlat.lon,lonlat.lat), 0);
+		map.zoomToScale(0.00011596125086294817,true); 
+
+	}
+	
+	function creatContentHTML(dmt){
+		 var contentHTML = "<div style=\'font-size:.8em; opacity: 0.8; overflow-y:hidden;\'>";
+         contentHTML += "<div>卡口点："+dmt[2]+"</div>";
+         contentHTML += "<div>过车时间："+dmt[3]+"</div>";
+         contentHTML += "<div>经度："+dmt[0]+"</div>";
+         contentHTML += "<div>纬度："+dmt[1]+"</div>";
+         contentHTML += "</div>";
+         return contentHTML;
+	}
+
+	
+     function openInfoWin() {
+         closeInfoWin();
+         var marker = this;
+         var dmt = marker.dmt;
+         var view = marker.view;
+         var lonlat = marker.getLonLat();
+         var size = new SuperMap.Size(0, 40);
+         var offset = new SuperMap.Pixel(0, -size.h);
+         var icon = new SuperMap.Icon(getIcon(view,dmt), size, offset);
+         var popup = new SuperMap.Popup.FramedCloud("popwin",
+                 new SuperMap.LonLat(lonlat.lon,lonlat.lat),
+                 null,
+                 creatContentHTML(dmt),
+                 icon,
+                 false);
+         infowin = popup;
+         map.addPopup(popup);
+     }
+     //关闭信息框
+     function closeInfoWin(){
+         if(infowin){
+             try{
+                 infowin.hide();
+                 infowin.destroy();
+             }
+             catch(e){}
+         }
+     }
+        
+	function expandWin(){
+	 	$("#maximizeDiv").hide();
+	 	$("#searchDiv").css("width","auto");
+	 	$("#minimizeDiv").show();
+	}
+	
+	function unExpandWin(){
+		$("#maximizeDiv").show();
+		$("#searchDiv").css("width","24px");
+		$("#minimizeDiv").hide();
+	}
+	
+	
+	function findPath() {
+	        var findPathService, parameter, analystParameter, resultSetting;
+	        resultSetting = new SuperMap.REST.TransportationAnalystResultSetting({
+	            returnEdgeFeatures: true,
+	            returnEdgeGeometry: true,
+	            returnEdgeIDs: true,
+	            returnNodeFeatures: true,
+	            returnNodeGeometry: true,
+	            returnNodeIDs: true,
+	            returnPathGuides: true,
+	            returnRoutes: true
+	        });
+	        analystParameter = new SuperMap.REST.TransportationAnalystParameter({
+	            resultSetting: resultSetting,
+	            weightFieldName: "SmLength"
+	        });
+	        parameter = new SuperMap.REST.FindPathParameters({
+	            isAnalyzeById: false,
+	            nodes: nodeArray,
+	            hasLeastEdgeCount: false,
+	            parameter: analystParameter
+	        });
+	        alert("请查看车辆的行车轨迹信息！");
+	        findPathService = new SuperMap.REST.FindPathService(url2, {
+	            eventListeners: { "processCompleted": processCompleted }
+	        });
+
+	        findPathService.processAsync(parameter);
+	    }
+		
+	    function processCompleted(findPathEventArgs) {
+	    	
+	    	var result = findPathEventArgs.result;
+	        allScheme(result);
+	    }
+	    function allScheme(result) {
+	        if (i < result.pathList.length) {
+	            addPath(result);
+	        } else {
+	            i = 0;
+	            //线绘制完成后会绘制关于路径指引点的信息
+	            addPathGuideItems(result);
+	        }
+	    }
+	    //以动画效果显示分析结果
+	    function addPath(result) {
+	        if (j < result.pathList[i].route.components.length) {
+	            var pathFeature = new SuperMap.Feature.Vector();
+	            var points = [];
+	            for (var k = 0; k < 2; k++) {
+	                if (result.pathList[i].route.components[j + k]) {
+	                    points.push(new SuperMap.Geometry.Point(result.pathList[i].route.components[j + k].x, result.pathList[i].route.components[j + k].y));
+	                }
+	            }
+	            var curLine = new SuperMap.Geometry.LinearRing(points);
+	            pathFeature.geometry = curLine;
+	            pathFeature.style = style;
+	            vectorLayer.addFeatures(pathFeature);
+	            //每隔0.001毫秒加载一条弧段
+	            pathTime = setTimeout(function () { addPath(result); }, 0.001);
+	            j++;
+	        } else {
+	            clearTimeout(pathTime);
+	            j = 0;
+	            i++;
+	            allScheme(result);
+	        }
+	    }
+
+	    function addPathGuideItems(result){
+
+	    	vectorLayer.removeAllFeatures();
+	        //显示每个pathGuideItem和对应的描述信息
+	        for(var k = 0; k < result.pathList.length; k++){
+	            var pathGuideItems = result.pathList[i].pathGuideItems, len = pathGuideItems.length;
+	            for(var m = 0; m < len; m++){
+	                var guideFeature = new SuperMap.Feature.Vector();
+	                guideFeature.geometry = pathGuideItems[m].geometry;
+	                guideFeature.attributes = {description: pathGuideItems[m].description};
+	/*                  if(guideFeature.geometry.CLASS_NAME === "SuperMap.Geometry.Point"){
+	                    guideFeature.style = styleGuidePoint;
+	                }
+	                else{
+	                    guideFeature.style = style;
+	                }  */
+	                
+	                guideFeature.style = style;
+	                
+	                vectorLayer.addFeatures(guideFeature);
+	            }
+	        }
+	 //       select.activate();
+	    }
+	
+	
+</script>
+<h1  align="center">区域碰撞分析明细</h1>
+<style>
+	  #loading{
+		   position:fixed;_position:absolute;top:30%;left:45%;
+		   width:120px;height:120px;overflow:hidden;
+		   background:url(img/loading1.gif) no-repeat;
+		   z-index:3000;
+	   }
+	   #progressMask{
+	         display: block; 
+			 width: 100%; 
+			 height: 100%; 
+			 opacity: 0.6; 
+			 filter: alpha(opacity=60); 
+			 background:black; 
+			 position: absolute; 
+			 top: 0; 
+			 left: 0; 
+			 z-index: 2000;
+	   }
+</style>
+</head>
+<body >
+	<div>
+		<div id="map">
+			<a id="viewEntire" onClick="viewEntire()" title="全幅显示"></a>
+			<a id="zoomIn" onClick="zoomIn()" title="放大"></a>
+			<a id="zoomOut" onClick="zoomOut()" title="缩小"></a>
+		</div>							
+	</div>
+	<div id="wrapper" >
+			<div class="row">
+				<div class="col-lg-12">			
+				  <div class="table-responsive" >	
+					<table class="table table-striped table-bordered table-hover"  id="tab2" style="margin-left:13px">
+						<thead>
+							<tr>
+								<th width="10%">
+									车牌号码
+								</th>
+								<th width="10%">
+									卡口点
+								</th>
+								<th width="10%"> 
+									方向
+								</th>
+								<th width="10%">
+									速度
+								</th >
+								<th width="10%">
+									车道号
+								</th>
+								<th width="20%">
+									过车时间
+								</th>
+								<th width="30%">
+									过车图片
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>			
+				</div>
+			</div>
+		</div>					
+	</div>
+	<script type="text/javascript">
+		$(function() { 
+			gotwosearch();
+		});
+		function gotwosearch(){
+	    	 
+			var params = '<%=request.getParameter("params")%>'; 
+			
+			$.ajax({
+				url: 'http://localhost:8086/bdhp_apiserver/analyseQuery/areaCollisionDetail.do?s=1578c30d163c4a68b80df4a70cbcf954&j='+params,
+				type: 'GET',
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'jsonp',
+				jsonp:'callback',
+				success: function(response) {
+				 	if(response.isSuc){
+				 		var tArray = new Array(); 
+				 		var data =response.results.subCarRecords;
+						var html = "";
+						if(response.plateNo!='车牌'){
+							for(var i=0; i<data.length;i++){
+								var recordlist=data[i].basePicRecord;
+								html += "<tr title='卡口："+data[i].basePicRecord.bayonetid+"；经纬度："+data[i].altitude+"，"+data[i].latitude+"'><td>" + recordlist.plateno+ "</td>";
+								html += "<td>" + recordlist.bayonetName+ "</td>";
+								html += "<td>" + data[i].directionno+ "</td>";
+								html += "<td>" + recordlist.vehiclespeed+ "</td>";
+								html += "<td>" + recordlist.vehiclewaycode+ "</td>";
+								html += "<td>" + data[i].pastkkdate+ "</td>";
+								var picurl = recordlist.pic2Url;
+								html += "<td><a href="+picurl+"  target=_blank><img src="+picurl+" height=100 width=150></img></a></td></tr>";
+								tArray[i]=new Array(); 
+							 	tArray[i][0] = data[i].altitude;
+							 	tArray[i][1] = data[i].latitude;
+							 	tArray[i][2] = recordlist.bayonetName;
+							 	tArray[i][3] = data[i].pastkkdate;
+							 }
+						}
+					}
+				 	findLjd(tArray);
+				 	$("#tab2 tbody").html(html);
+					$("#progressMask").hide(); 
+				},
+			error:function(jqXHR, textStatus, errorThrown){   
+               if(textStatus=="timeout"){  
+						$("#progressMask").hide(); 
+                		$("#tips").html("加载超时，请重试"); 
+				  
+              		 }
+					 else{  
+					 	$("#progressMask").hide();  
+                  		alert(textStatus);   
+             		 }  
+         		 }  ,
+         		timeout:200000
+				});
+	}
+	</script>
+				
+				
+			
+
+	</body>
+</html>

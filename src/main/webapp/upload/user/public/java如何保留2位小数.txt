@@ -1,0 +1,14 @@
+方法1：
+
+ float   f   =  34.232323;  
+ BigDecimal   b  =   new BigDecimal(f);  
+ float   f1   =  b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();  
+ //   b.setScale(2,  BigDecimal.ROUND_HALF_UP) 表明四舍五入，保留两位小数
+即
+1.  float ft   =  134.3435f;    
+2.    
+3.  int   scale  =   2;//设置位数    
+4.  int   roundingMode  =  4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.    
+5.  BigDecimal   bd  =   new  BigDecimal((double)ft);    
+6.  bd   =  bd.setScale(scale,roundingMode);    
+7.  ft   =  bd.floatValue();  

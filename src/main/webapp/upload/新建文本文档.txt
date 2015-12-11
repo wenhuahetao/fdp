@@ -1,0 +1,32 @@
+
+	/**
+	  * upload common file
+	  */
+	 @RequestMapping(value="/collection/uploadFile", method = RequestMethod.POST)
+	 public ModelAndView uploadFile(@RequestParam(value = "checkCode") int checkCode,
+			 @RequestParam(value = "importfilename", required = false) MultipartFile importfilename, HttpServletRequest request, ModelMap model) {
+		 	 String hdfsPath = "/user/public/"+sdf.format(new Date());
+	        try {
+		        String path = request.getSession().getServletContext().getRealPath("upload");
+		        String fileName = importfilename.getOriginalFilename();
+		        hdfsService.addDir(hdfsPath);
+		        boolean isText = fileName.contains("txt");
+		        // utf-8 write into server
+		        if(isText){
+		        	File targetFile = new File(path,fileName);
+				    targetFile.createNewFile();
+		        	InputStream inputStream = importfilename.getInputStream();
+		        	hdfsService.writeUTFToFile(path+"/"+fileName,inputStream,isText);
+		        }else{
+		        	File targetFile = new File(path,fileName);
+		        	importfilename.transferTo(targetFile);
+		        }
+		        ResourceUtils.getSolrInstance().deleteDoc(hdfsPath+"/"+fileName);
+	        	hdfsService.upload(path+"/"+fileName,hdfsPath+"/"+fileName,checkCode);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        String parms = "?successedCount=1&current_name_dir="+hdfsPath;
+			return new ModelAndView("redirect:/jump"+parms);
+	}
+}

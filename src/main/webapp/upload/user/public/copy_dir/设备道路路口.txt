@@ -1,0 +1,60 @@
+R_顺行限速.PathName,avg(R_顺行限速.SpeedClass),sum(R_顺行限速.Length),avg(R_顺行限速.Width)
+
+
+select d.name,d.road_id,d.cross_id,d.road_name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d
+where d.device_type_id = 27 and d.max_speed is null
+order by road_id
+
+select * from traffic_infrastru_adm.t_road t 
+
+select * from traffic_infrastru_adm.t_cross t
+
+select * from  traffic_infrastru_adm.t_speed_class
+
+
+
+--------------------------------27设备（路口）---------------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,d.corss_name,t.name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_cross t
+where d.device_type_id = 27 
+and d.cross_id=t.id
+order by cross_id
+--------------------------------27设备（道路）--------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,t.name,d.corss_name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_road t
+where d.device_type_id = 27
+and d.road_id=t.id
+order by road_id
+--------------------------------26设备（路口）----------------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,d.corss_name,t.name,d.direction,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_cross t
+where d.device_type_id = 26
+and d.cross_id=t.id
+order by cross_id,direction
+--------------------------------26设备（道路）---------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,t.name,d.corss_name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_road t
+where d.device_type_id = 26
+and d.road_id=t.id
+order by road_id
+--------------------------------15设备（路口）---------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,d.corss_name,t.name,d.direction,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_cross t
+where d.device_type_id = 15
+and d.cross_id=t.id
+order by cross_id,direction
+
+--------------------------------15设备（道路）---------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,t.name,d.corss_name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_road t
+where d.device_type_id = 15
+and d.road_id=t.id 
+order by road_id
+
+-------------------------------------15,16,26,27------------------------------
+select d.name,d.road_id,d.cross_id,d.road_name,t.name,d.corss_name,d.max_speed,d.road_width,d.road_length,d.speed_class,d.rowid
+ from traffic_infrastru_adm.t_device_info d ,traffic_infrastru_adm.t_road t
+where (d.device_type_id = 16 or d.device_type_id = 15 or d.device_type_id = 26 or d.device_type_id = 27)
+and d.road_id=t.id 
+order by road_name

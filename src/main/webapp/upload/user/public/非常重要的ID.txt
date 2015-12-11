@@ -1,0 +1,50 @@
+6月25号  1617552901
+
+
+
+
+
+1621163456   6月26号6点20分 max(ID)
+
+
+select * from T_RECORD_CARINFO t where t.record_id <=1621163456 and t.record_id >=1621152456 
+
+delete from T_RECORD_CARINFO t where t.record_id <=1621152456 and t.record_id >=1621151456
+
+select * from T_RECORD_CARINFO t
+
+select count(*) from  T_RECORD_CARINFO t
+
+select l.session_id,o.owner,o.object_name from v$locked_object l,dba_objects o where l.OBJECT_ID=o.OBJECT_ID
+
+select * from v_t_performance_index
+
+truncate table T_RECORD_CARINFO
+
+
+
+select v.car_num, s.code_name as car_type, vc.behaviour_memo, 
+
+ad.address_name,v.create_date as create_date,
+vc.behaviour_code,ad.address_code,ad.org_code,ad.org_name
+ from ppis.ppi_violation_record v
+ left join ppis.ppi_violation_behaviour vc
+ on v.violation_behaviour_id = vc.id
+ left join ppis.ppi_violation_address ad
+ on v.violation_address_id = ad.id
+ left join ppis.ppi_sys_code s
+ on ( v.car_num_type = s.code_code and s.code_type = 1)
+where ad.address_name is not null
+and ad.address_code is not null
+and vc.behaviour_memo is not null
+and vc.behaviour_code is not null
+and v.create_date between sysdate-1 and sysdate
+  order by v.create_date desc
+  
+  select * from ppis.ppi_violation_record v
+  select* from ppis.ppi_violation_address ad
+  select * from ppis.ppi_sys_code s
+  select * from ppis.ppi_violation_behaviour vc
+  
+
+  

@@ -1,0 +1,34 @@
+select v.hphm as car_num,c.wfms as behaviour_memo ,r.ldmc as address_name,
+v.wfsj as create_date,v.wfxw as behaviour_code,v.wfdd as address_code ,v.cljg as org_code,
+d.bmmc as org_name,v.hpzl,v.lrsj,substr(v.cljg,0,6) as xzqh
+ from trff_app.vio_violation v 
+left join trff_app.frm_roadsegitem r
+on (v.lddm = r.lddm and v.wfdd = r.dldm)
+left join trff_app.vio_codewfdm c
+on v.wfxw=c.wfxw
+left join trff_app.FRM_DEPARTMENT d
+on v.cljg=d.glbm
+where v.xxly=2  
+and  v.lrsj>to_date('2015-08-01 00:00:00','yyyy/mm/dd hh24:mi:ss')
+
+
+
+
+
+
+
+select v.hphm as D_CPH,c.wfms as behaviour_memo ,r.ldmc as D_DL,
+to_char(v.wfsj,'yyyy-mm-dd hh24:mi:ss') as D_WFSJ,substr(to_char(v.wfsj,'yyyy-mm-dd'),0,10) as d_date, 
+v.wfxw as D_WFXW,v.wfdd as address_id ,v.cljg as f_zzjg_code,
+d.bmmc as f_zzjg,v.hpzl,v.lrsj as cdrq,r.xzqh as xzqh,substr(v.cljg,0,6) as cldq
+ from trff_app.vio_violation v 
+left join trff_app.frm_roadsegitem r
+on (v.lddm = r.lddm and v.wfdd = r.dldm)
+left join trff_app.vio_codewfdm c
+on v.wfxw=c.wfxw
+left join trff_app.FRM_DEPARTMENT d
+on v.cljg=d.glbm
+where v.xxly=1 
+and v.lrsj>=to_date('2015-08-01 00:00:00','yyyy-mm-dd hh24:mi:ss')
+
+

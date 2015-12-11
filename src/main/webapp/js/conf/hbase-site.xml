@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- /** * * Licensed to the Apache Software Foundation (ASF) under one * 
+	or more contributor license agreements. See the NOTICE file * distributed 
+	with this work for additional information * regarding copyright ownership. 
+	The ASF licenses this file * to you under the Apache License, Version 2.0 
+	(the * "License"); you may not use this file except in compliance * with 
+	the License. You may obtain a copy of the License at * * http://www.apache.org/licenses/LICENSE-2.0 
+	* * Unless required by applicable law or agreed to in writing, software * 
+	distributed under the License is distributed on an "AS IS" BASIS, * WITHOUT 
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. * See the 
+	License for the specific language governing permissions and * limitations 
+	under the License. */ -->
+<configuration>
+	<property>
+		<name>hbase.rootdir</name>
+		<value>hdfs://bdhpcluster/bdhp_hbase_root/</value>
+	</property>
+	<property>
+		<name>hbase.tmp.dir</name>
+		<value>/home/hadoop/hbase-0.98.7-hadoop2/data/</value>
+	</property>
+	<property>
+		<name>hbase.cluster.distributed</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hbase.zookeeper.quorum</name>
+		<value>hadoop.hm,hadoop.hm.bak1,hadoop.slave.s6</value>
+	</property>
+	<property>
+		<name>hbase.zookeeper.property.clientPort</name>
+		<value>2181</value>
+	</property>
+	<property>
+		<name>hbase.master.port</name>
+		<value>60000</value>
+	</property>
+	<property>
+		<name>zookeeper.session.timeout</name>
+		<value>60000</value>
+	</property>
+	<property>
+		<name>zookeeper.znode.parent</name>
+		<value>/hbase</value>
+	</property>
+	<property>
+		<name>hbase.hregion.memstore.block.multiplier</name>
+		<value>2</value>
+		<description>当memsotre总大小为flushsize的2倍时,阻塞所有写操作</description>
+	</property>
+	<property>
+		<name>hbase.hstore.blockingStoreFiles</name>
+		<value>7</value>
+	</property>
+	<property>
+		<name>hbase.hregion.max.filesize</name>
+		<value>10737418240</value>
+	</property>
+	<property>
+		<name>hbase.hregion.memstore.flush.size</name>
+		<value>134217728</value>
+	</property>
+	<property>
+		<name>hfile.block.cache.size</name>
+		<value>0.25</value>
+	</property>
+	<property>
+		<name>hfile.index.block.max.size</name>
+		<value>131072</value>
+	</property>
+	<property>
+		<name>hbase.regionserver.global.memstore.upperLimit</name>
+		<value>0.4</value>
+		<description>强制执行flush 所有memsotre的 所有memsotre内存总和上限</description>
+	</property>
+	<property>
+		<name>hbase.regionserver.global.memstore.lowerLimit</name>
+		<value>0.35</value>
+		<description>停止强制执行flush,仍然会执行部分超过flushsize的memsotre</description>
+	</property>
+	<property>
+		<name>hbase.regionserver.handler.count</name>
+		<value>180</value>
+	</property>
+	<property>
+		<name>hbase.server.thread.wakefrequency</name>
+		<value>10000</value>
+	</property>
+	<property>
+		<name>hbase.client.pause</name>
+		<value>200</value>
+	</property>
+	<property>
+		<name>hbase.client.retries.number</name>
+		<value>5</value>
+	</property>
+	<property>
+		<name>hbase.ipc.client.tcpnodelay</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hbase.balancer.period</name>
+		<value>3000000</value>
+	</property>
+	<property>
+		<name>hbase.hregion.preclose.flush.size</name>
+		<value>5242880</value>
+	</property>
+	<property>
+		<name>hbase.hregion.majorcompaction</name>
+		<value>604800000</value>
+	</property>
+	<property>
+		<name>hbase.hregion.max.filesize</name>
+		<value>10737418240</value>
+	</property>
+	<property>
+		<name>hbase.hregion.memstore.block.multiplier</name>
+		<value>2</value>
+	</property>
+	<property>
+		<name>dfs.replication</name>
+		<value>3</value>
+	</property>
+	<property>
+    <name>hbase.coprocessor.region.classes</name>
+    <value>org.apache.hadoop.hbase.coprocessor.AggregateImplementation</value>
+	</property>  
+</configuration>

@@ -1,0 +1,211 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #fff;
+    color: #555;
+    font-size: 14px;
+    font-family: yahei, Verdana, Arial, Helvetica, sans-serif, Verdana, Arial, Helvetica, sans-serif;
+}
+
+td, th, caption {
+    font-size: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-size: 100%;
+}
+
+address, caption, cite, code, dfn, em, strong, th, var {
+    font-style: normal;
+    font-weight: normal;
+}
+
+a {
+    color: #555;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    border: none;
+}
+
+ol, ul, li {
+    list-style: none;
+}
+
+input, textarea, select, button {
+    font: 14px Verdana, Helvetica, Arial, sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.mainbody {
+    width: 98%;
+    margin: 20px auto;
+    border-radius: 4px;
+}
+
+.topbar {
+    border-bottom: 1px solid #ababab;
+    padding: 6px 12px;
+}
+
+.topbar .logo {
+    height: 25px;
+    width: 60px;
+    margin-right: 10px;
+}
+
+.topbar table {
+    border-collapse: collapse;
+}
+
+.topbar table td {
+    height: 25px;
+    border-right: 1px solid #ababab;
+    padding: 0 10px;
+    width: 4em;
+    text-align: center;
+}
+
+.maincontent {
+    padding: 0 12px;
+}
+
+.maincontent h1 {
+    font-size: 20px;
+    line-height: 3em;
+    font-weight: bold;
+}
+
+.maincontent .seachBar {
+    padding: 12px 12px 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ababab;
+    margin-bottom: 30px;
+   
+}
+
+.maincontent .seachBar .textStyle {
+    border: 1px solid #ababab;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 5px;
+    margin-right: 10px;
+}
+
+.seachBar .buttonStyle {
+    background-color: #ababab;
+    border: none;
+    width: 5.5em;
+    border-radius: 4px;
+    margin-left: 10px;
+    color: #ffffff;
+}
+
+.seachBar .buttonStyle:hover {
+    background-color: #555555;
+}
+
+.seachBar .buttonStyle:focus {
+    background-color: #ababab;
+}
+.seachBar .locationAdd,.seachBar .locationAdd a{
+    color: #3948ff;
+    font-size: 16px;
+    line-height: 25px;
+}
+.seachBar .locationAdd a:hover{
+    text-decoration: underline;
+}
+.seachBar a:last-child:hover{
+    text-decoration: none;
+}
+.seachBar a:last-child{
+    color: #555;
+    cursor: default;
+}
+.seachBar .sLogo{
+    height: 20px;
+    width: 20px;
+    margin: 4px 30px;
+}
+.filesTable{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+   
+}
+.filesTable th,.filesTable td{
+    border-bottom: 1px solid #ababab;
+    height: 35px;
+    text-align: left;
+    padding: 0 10px 0 5px;
+    font-family: "ºÚÌå"
+}
+.filesTable .nameTd{
+    min-width: 16em;
+    max-width: 25em;
+}
+.filesTable td img{
+    height: 16px;
+    width: 16px;
+    position: relative;
+    top: 2px;
+}
+.nav-tabs li{font-size:18px}
+a{color:#43c400}
+.seachBar .locationAdd,.seachBar .locationAdd a{color: #43c400;}
+.seachBar a:last-child{
+    color: #555;
+    cursor: default;
+}
+.maincontent .seachBar {
+    padding: 15px 12px 10px 5px;
+    border: 1px solid #d7d7d7;
+    margin-bottom: 30px;
+}
+.seachBar .sLogo{
+    height: 20px;
+    width: 20px;
+    margin: 4px 10px;
+}
+.mainbody {
+    width: 100%;
+    margin: 0px auto;
+    border-radius: 4px;
+}

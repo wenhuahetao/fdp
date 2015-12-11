@@ -1,0 +1,78 @@
+$(function(){
+	   var dates = $("#startTime,#endTime");
+		var option;
+		var targetDate;
+		var optionEnd;
+		var targetDateEnd;
+		dates.datepicker({
+			showButtonPanel:false,
+			onSelect: function(selectedDate){  
+			  if(this.id == "startTime"){
+				// 如果是选择了开始时间（startDate）设置结束时间（endDate）的最小时间和最大时间
+				option = "minDate"; //最小时间
+				var selectedTime = getTimeByDateStr(selectedDate);
+				var minTime = selectedTime;
+			//最小时间 为开第一个日历控制选择的时间
+				targetDate = new Date(minTime); 
+				//设置结束时间的最大时间
+				optionEnd = "maxDate";
+			//因为只能做三天内的查询  所以是间隔2天  当前时间加上2*24*60*60*1000
+				targetDateEnd = new Date(minTime+2*24*60*60*1000);
+			  }else{
+				// 如果是选择了结束时间（endDate）设置开始时间（startDate）的最小时间和最大时间
+				option = "maxDate"; //最大时间
+				var selectedTime = getTimeByDateStr(selectedDate);
+				var maxTime = selectedTime;
+				targetDate = new Date(maxTime);
+				//设置最小时间 
+				optionEnd = "minDate";
+				targetDateEnd = new Date(maxTime-2*24*60*60*1000);
+			  }
+			  dates.not(this).datepicker("option", option, targetDate);  
+			  dates.not(this).datepicker("option", optionEnd, targetDateEnd);  
+			}
+		});
+});
+ hadoop jar plateMPR.jar com.dahua.bdhp.mpr.service.plateanalyse.PlateAnalyseCombineMpr BDHP_BASEPICRECORD_tmp_83 "2015-08-24 00:00:00" "2015-08-25 23:59:59"
+
+				$(function(){
+					   var dates = $("#startTime,#endTime");
+						var option;
+						var targetDate;
+						var optionEnd;
+						var targetDateEnd;
+						dates.datepicker({
+							showButtonPanel:false,
+							onSelect: function(selectedDate){  
+							  if(this.id == "startTime"){
+								  $("#endTime").val(AddDays(30,$(this).val()));
+							  }else{
+								  $("#startTime").val(DelDays(30,$(this).val()));
+							}
+							}
+						});
+				});
+
+				 <a href="#" onClick="WindowOpener.jumpRoot()"><img src="<%=request.getContextPath()%>/images/sousuo.png" alt="" /></a></div>
+				
+4）	假牌分析
+基于车牌信息库分析：
+1、	根据过车记录分析在行驶中的假牌，保存至疑似假牌车辆库
+2、	显示疑似假牌车辆的最近行驶路径
+3、	发现假牌和套牌后调用布控接口，一旦这些车辆上路，可实时上报到相关民警的警务通上
+4、	统计假牌总数量
+5、	分析该车的高频点、落脚点
+5）	报废车分析
+基于车辆信息库分析：
+1、	根据过车记录分析在行驶中的报废车，保存至报废车行驶记录库
+2、	还在使用的报废车辆的行驶轨迹
+3、	报废车辆的详细信息，包括车主信息
+4、	统计报废车数量
+5、	分析该车的高频点、落脚点
+6）	未年检车记录分析
+   基于车辆信息库分析：
+1、	根据过车记录分析在行驶中的未年检车，保存至未年检车行驶记录库
+2、	还在使用的未年检车辆的行驶轨迹
+3、	未年检车辆的详细信息，包括车主信息
+4、	统计未年检车数量
+5、	分析该车的高频点、落脚点

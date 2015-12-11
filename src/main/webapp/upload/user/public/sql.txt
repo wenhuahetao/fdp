@@ -1,0 +1,23 @@
+1.truncate table table_name ---快速删除表记录
+2.CREATE INDEX 索引名称 ON 表名(表字段1,表字段2，......); ---建索引 
+3.select * from v$instance ---版本
+4.Oracle中可以把查询的结果根据结果集中的表结构和数据形成一张新表：CREATE TABLE 表名 AS SELECT 语句。如果单想复制表结构，不复制其中的内容则加一个不成立的语句，比如：WHERE 1 = 2,则只会复制表结构。
+5.主键自增：auto_increment
+
+
+
+
+alter table CAR_ERROR
+  add primary key (ID)
+  using index 
+  tablespace TRAFFIC_FLOW
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
